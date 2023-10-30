@@ -19,11 +19,20 @@ pacman::p_load(
   tidyverse,
   flextable,
   incidence2,
-  stringr
+  stringr,
+  tidyr,
+  ggplot2,
+  dplyr,
 )
 ```
 
 ```{r Load_Data}
+library(tidyr)
+library(ggplot2)
+library(dplyr)
+qpcr_data <- read.csv("E:/Laboratoire/Stats/Rstudio/Exercice/qPCR/qpcr_datab.csv", skip = 27, stringsAsFactors = FALSE)
+qpcr_data
+qpcr_dataset<-qpcr_datab.csv
 table1<-import(here("data", "clean","qPCR"))
 ```
 
@@ -47,7 +56,7 @@ if (params$graph) {
 
 ```{r Exportation}
 library(finalfit)
-write.csv2 (nom_du_fichier, here::here("data", "outpout","nom_du_ficier"), row.names = FALSE) 
+write.csv2 (qpcr_data, here::here("data", "clean","qpcr_data"), row.names = FALSE) 
 
 #PDF
 pdf("nom_de_doc.pdf")

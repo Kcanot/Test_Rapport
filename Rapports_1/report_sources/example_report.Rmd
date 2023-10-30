@@ -43,10 +43,15 @@ if (params$graph) {
 
 ```
 
-#Exportation
+
+
+```{r Exportation}
 library(finalfit)
-write.csv2 (nom_du_fichier, here::here("data", "outpout","nom_du_ficier"), row.names = FALSE)
+write.csv2 (nom_du_fichier, here::here("data", "outpout","nom_du_ficier"), row.names = FALSE) 
+
+#PDF
 pdf("nom_de_doc.pdf")
 ggplot1
 ggplot2
 dev.off()
+```

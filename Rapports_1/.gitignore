@@ -2,3 +2,9 @@
 outputs
 .Rhistory
 *.Rproj
+*.csv
+*.sas7bdat
+*.xls
+*.xlsx
+*.html
+*.pdf

@@ -52,8 +52,6 @@ if (params$graph) {
 
 ```
 
-
-
 ```{r Exportation}
 library(finalfit)
 write.csv2 (qpcr_data, here::here("data", "clean","qpcr_data"), row.names = FALSE) 

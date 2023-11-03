@@ -2,7 +2,7 @@
 library(reportfactory)
 
 new_factory(
-  factory = "Rapports_1",
+  factory = "qPCR_TP_TAD",
   path = ".",
   report_sources = "report_sources",
   outputs = "outputs",

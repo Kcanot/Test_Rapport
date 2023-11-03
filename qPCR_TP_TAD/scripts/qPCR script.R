@@ -6,70 +6,83 @@ library(finalfit)
 library(qpcR)
 library(readr)
 library(here)
+library(skimr)
+library(qPCRtools)
+library(ggplot2)
+library(tidymodels)
+
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("ReadqPCR")
+BiocManager::install("NormqPCR")
+library(NormqPCR)
+library(ReadqPCR)
+
+sample<-read.csv2("data/clean/sample.csv")
+etalon<-read.csv2("data/clean/etalon.csv")
 
 qtable<-TP_TAD_qPCR_groupe_jeudi_vendredi_donne_es_nifH_septembre_2019
 
 write.csv2(qtable,here::here("raw","qPCR_table.csv"),row.names =FALSE)
 
 str(qtable)
+skim(qtable)
 
 #Nettoyer
-qtable<-qPCR_table
-clean_names(qtable)
+qtable<-qtable|>
+  dplyr::select( Content, Ct, `Starting Quantity (SQ)`, `Log Starting Quantity`, `SQ Mean`)
 
+qtable<-qtable|>
+  clean_names()
+
+dplyr::select()
+ 
 #Renommer
 #qtable <- qtable %>% 
  # rename(code_postal=code_po_stal)
 
+#1 Tableaux 1 : sample
 
-#1 Tableaux 1 : echantillons
+sample<-qtable %>%
+  filter(content %in% c("maïs", "maïs cDNA","colza","colza cDNA","sol nu","Sol nu cDNA"))
+View(sample)
 
-echantillons<- qtable %>%
-  filter(Content=="maïs")
-
-echantillons_2<- qtable %>%
-  filter(Content=="colza")
-
-echantillons_3<- qtable %>%
-  filter(Content=="sol nu")
-
-echantillons<-full_join(echantillons,echantillons_2)
-echantillons<-full_join(echantillons,echantillons_3)
-
-sample<- echantillons|>select(Content, Ct)
-sample<-drop_na(sample,Ct)
+  #Deletion NA
+sample<-sample|>
+  dplyr::select(content, ct)
+sample<-print(na.omit(sample))
 
 write.csv2(sample, here::here("data","sample.csv"),row.names = FALSE)
 
+deltaCt(sample)
+
 #2 Tableaux 2 : Standards
 
-ST<- qtable %>%
-  filter(Content=="Std 1")
+etalon<-print(na.omit(qtable))
+qtable %>%
+  select(content,ct)
 
-STd<- qtable %>%
-  filter(Content=="Std 2")
+write.csv2(etalon, here::here("data","etalon.csv"),row.names = FALSE)
 
-std<-full_join(ST,STd)
- 
-std<- std|>select(Content, Ct, `Starting Quantity (SQ)`,`Log Starting Quantity`,`SQ Mean`)
+etalon<-etalon |>
+  group_by(content)
 
-write.csv2(std, here::here("data","std.csv"),row.names = FALSE)
+CalCurve(etalon)
 
-#3 NTC = Ctrl neg
-Ctrl<- qtable %>%
-  filter(Content=="NTC")
+  # Droite étalon
 
-#1 Eliminer les colonnes superflues (well, biological set name, set point, well note)
+std1<-etalon %>%
+  filter(content %in% c("Std 1"))
+lm(std1)
+ggplot(std1, aes(y=ct, x=log_starting_quantity))+
+  geom_point()+
+  geom_smooth(colour="red", method="lm", fill="red") +
+  ylab("Cycle threshold (ct) value")+
+  xlab("Log of initial gene number") +
+  theme_classic()+
+  annotate("text", x = 8, y = 40, label = "prestige = -10.73 + 5.36 * education\n (pval<0.001)") 
 
-
-
-
-head(qpcr_data)
-primer_key <- data.frame(row = c("A", "B", "C", "D", "E", "F", "G", "H"),
-                         primers = c(rep("HK", 4), rep("test", 4)))
-
-tidy_data <- separate(qpcr_data, Well, into = c("row", "column"), 
-                      sep = 1, convert = TRUE)
 head(tidy_data)
 tidy_data <- left_join(tidy_data, primer_key, by = "row")
 

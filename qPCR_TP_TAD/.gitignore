@@ -2,3 +2,6 @@
 outputs
 .Rhistory
 *.Rproj
+.csv
+.pdf
+.R

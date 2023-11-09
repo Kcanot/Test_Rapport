@@ -1,0 +1,44 @@
+---
+title: "BibLateX et biblio avec Zotero"
+author: "Jérémie SUDOL"
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+  html_document: default
+bibliography: Documents Zotero.bib
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Le site <https://quanti.hypotheses.org/2270>
+
+# BibLateX
+
+Format permettant le référencement d'article. Il nécessite l'importation des éléments dans un fichier .bib ( BetterbibLatex avec l'extention de Zotero). Pour utiliser BibLaTeX, il est nécessaire dans le préambule de faire appel aux packages `csquotes` et `biblatex`.
+
+```{r packages, warning=FALSE}
+library(bibtex)
+```
+
+# Citation :
+
+Au fil de votre texte, si vous avez besoin de citer un auteur, il suffit d'écrire sa clé de citation entre crochets et précédée d'un arobase. Par exemple :
+
+Le capital social peut être considéré comme une ressource individuelle possédée par les individus [@raoBrainFogginessGas2018].
+
+Il est possible de citer uniquement l'année de publication en ajoutant un signe moins devant la clé de citation :
+
+Selon Pierre Bourdieu, le capital social peut être considéré comme une ressource individuelle possédée par les individus [-@raoBrainFogginessGas2018].
+
+On peut également citer au fil du texte, sans parenthèses. Pour cela il suffit d'enlever les crochets :
+
+Selon @raoBrainFogginessGas2018, le capital social est une ressource individuelle.
+
+Enfin, pour citer plusieurs auteurs en même temps, il faut séparer les clés de citation par un point-virgule :
+
+Le capital social peut être défini comme une ressource apportée par notre réseau de relations [@raoBrainFogginessGas2018; @wiremanDevelopmentallyInducedAutolysis1977; @heAntibioticResistanceGenes2020 ].
+
+# Bibliographie
